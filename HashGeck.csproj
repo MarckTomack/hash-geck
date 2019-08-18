@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Configuration>Release</Configuration>
+    <PublishSingleFile>true</PublishSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup> 
+    <EmbeddedResource Include="ui/ui.glade">
+      <LogicalName>ui.glade</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="icon/icon.png"/>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="3.22.24.*" />
+  </ItemGroup>
+
+</Project>
