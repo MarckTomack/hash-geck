@@ -33,29 +33,15 @@ public class ErrorDialog
 
     public void ShowMessageDialog(ErrorType error, string path = null)
     {
-        string msg;
-
-        switch (error)
+        var msg = error switch
         {
-            case ErrorType.IsNotAFile:
-                msg = $"{Path.GetFileName(path)} is not a file";
-                break;
-            case ErrorType.NoFileToHash:
-                msg = "No file to hash";
-                break;
-            case ErrorType.NoTextToHash:
-                msg = "No text to hash";
-                break;
-            case ErrorType.NoTextOrHashToCheck:
-                msg = "No text or hash to check";
-                break;
-            case ErrorType.NoFileOrHashToCheck:
-                msg = "No file or hash to check";
-                break;
-            default:
-                msg = "ERROR";
-                break;
-        }
+            ErrorType.IsNotAFile => $"{Path.GetFileName(path)} is not a file",
+            ErrorType.NoFileToHash => "No file to hash",
+            ErrorType.NoTextToHash => "No text to hash",
+            ErrorType.NoTextOrHashToCheck => "No text or hash to check",
+            ErrorType.NoFileOrHashToCheck => "No file or hash to check",
+            _ => "ERROR",
+        };
         using (var errorMsg = new MessageDialog(null, DialogFlags.DestroyWithParent, MessageType.Error, ButtonsType.Ok, msg))
         {
             errorMsg.Run();

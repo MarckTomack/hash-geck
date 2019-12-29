@@ -19,6 +19,7 @@ using System;
 using Gtk;
 using UI = Gtk.Builder.ObjectAttribute;
 using System.IO;
+using System.Text;
 
 class MainWindow : Window
 {
@@ -84,24 +85,25 @@ class MainWindow : Window
         Application.Quit();
     }
 
-    private async void HashFile(object sender, EventArgs e)
+    private void HashFile(object sender, EventArgs e)
     {
         if (File.Exists(FileEntry.Text))
         {
+            byte[] fileToHash = File.ReadAllBytes(FileEntry.Text);
             if (MD5Radio.Active)
             {
-                ResultFile.Text = await GenerateHash.HashMD5File(FileEntry.Text);
+                ResultFile.Text = GenerateHash.HashMD5(fileToHash);
             }
             if (SHA256Radio.Active)
             {
-                ResultFile.Text = await GenerateHash.HashSHA256File(FileEntry.Text);
+                ResultFile.Text = GenerateHash.HashSHA256(fileToHash);
             }
             if (SHA512Radio.Active)
             {
-                ResultFile.Text = await GenerateHash.HashSHA512File(FileEntry.Text);
+                ResultFile.Text = GenerateHash.HashSHA512(fileToHash);
             }
         }
-        else if (FileEntry.Text == string.Empty)
+        else if (string.IsNullOrEmpty(FileEntry.Text))
         {
             ShowErrorMsg.ShowMessageDialog(ErrorDialog.ErrorType.NoFileToHash);
         }
@@ -113,20 +115,21 @@ class MainWindow : Window
 
     private void HashString(object sender, EventArgs e)
     {
-        if (TextToHash.Text != string.Empty)
+        if (!string.IsNullOrEmpty(TextToHash.Text))
         {
+            byte[] textToHash = Encoding.ASCII.GetBytes(TextToHash.Text);
             if (MD5Radio.Active)
             {
-                ResultText.Text = GenerateHash.HashMD5(TextToHash.Text);
+                ResultText.Text = GenerateHash.HashMD5(textToHash);
             }
             if (SHA256Radio.Active)
             {
-                ResultText.Text = GenerateHash.HashSHA256(TextToHash.Text);
+                ResultText.Text = GenerateHash.HashSHA256(textToHash);
             }
 
             if (SHA512Radio.Active)
             {
-                ResultText.Text = GenerateHash.HashSHA512(TextToHash.Text);
+                ResultText.Text = GenerateHash.HashSHA512(textToHash);
             }
         }
         else
@@ -137,11 +140,13 @@ class MainWindow : Window
 
     private void CheckHashString(object sender, EventArgs e)
     {
-        if (TextToCheck.Text != string.Empty || HashToCheck.Text != string.Empty)
+        if (!string.IsNullOrEmpty(TextToCheck.Text) || !string.IsNullOrEmpty(HashToCheck.Text))
         {
+
+            byte[] textToCheck = Encoding.ASCII.GetBytes(TextToCheck.Text);
             if (MD5Radio.Active)
             {
-                if (HashCheck.CheckMD5Hash(TextToCheck.Text, HashToCheck.Text))
+                if (HashCheck.CheckMD5Hash(textToCheck, HashToCheck.Text))
                 {
                     ResultImageFromText.SetFromStock(Stock.Ok, IconSize.LargeToolbar);
                 }
@@ -152,7 +157,7 @@ class MainWindow : Window
             }
             if (SHA256Radio.Active)
             {
-                if (HashCheck.CheckSHA256Hash(TextToCheck.Text, HashToCheck.Text))
+                if (HashCheck.CheckSHA256Hash(textToCheck, HashToCheck.Text))
                 {
                     ResultImageFromText.SetFromStock(Stock.Ok, IconSize.LargeToolbar);
                 }
@@ -163,7 +168,7 @@ class MainWindow : Window
             }
             if (SHA512Radio.Active)
             {
-                if (HashCheck.CheckSHA512Hash(TextToCheck.Text, HashToCheck.Text))
+                if (HashCheck.CheckSHA512Hash(textToCheck, HashToCheck.Text))
                 {
                     ResultImageFromText.SetFromStock(Stock.Ok, IconSize.LargeToolbar);
                 }
@@ -179,13 +184,14 @@ class MainWindow : Window
         }
     }
 
-    private async void CheckHashFile(object sender, EventArgs e)
+    private void CheckHashFile(object sender, EventArgs e)
     {
         if (File.Exists(FileToCheck.Text))
         {
+            byte[] fileToCheck = File.ReadAllBytes(FileEntry.Text);
             if (MD5Radio.Active)
             {
-                if (await HashCheck.CheckMD5HashFile(FileToCheck.Text, HashToCheckFile.Text))
+                if (HashCheck.CheckMD5Hash(fileToCheck, HashToCheckFile.Text))
                 {
                     ResultImageFromFile.SetFromStock(Stock.Ok, IconSize.LargeToolbar);
                 }
@@ -196,7 +202,7 @@ class MainWindow : Window
             }
             if (SHA256Radio.Active)
             {
-                if (await HashCheck.CheckSHA256HashFile(FileToCheck.Text, HashToCheckFile.Text))
+                if (HashCheck.CheckSHA256Hash(fileToCheck, HashToCheckFile.Text))
                 {
                     ResultImageFromFile.SetFromStock(Stock.Ok, IconSize.LargeToolbar);
                 }
@@ -207,7 +213,7 @@ class MainWindow : Window
             }
             if (SHA512Radio.Active)
             {
-                if (await HashCheck.CheckSHA512HashFile(FileToCheck.Text, HashToCheckFile.Text))
+                if (HashCheck.CheckSHA512Hash(fileToCheck, HashToCheckFile.Text))
                 {
                     ResultImageFromFile.SetFromStock(Stock.Ok, IconSize.LargeToolbar);
                 }
@@ -217,7 +223,7 @@ class MainWindow : Window
                 }
             }
         }
-        else if (FileToCheck.Text == string.Empty || HashToCheckFile.Text == string.Empty)
+        else if (string.IsNullOrEmpty(FileToCheck.Text) || string.IsNullOrEmpty(HashToCheckFile.Text))
         {
             ShowErrorMsg.ShowMessageDialog(ErrorDialog.ErrorType.NoFileOrHashToCheck);
         }

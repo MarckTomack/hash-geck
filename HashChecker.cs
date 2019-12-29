@@ -14,93 +14,32 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
-using System.Threading.Tasks;
 
 public class HashChecker
 {
     private readonly HashGenerator GenerateHash = new HashGenerator();
 
-    public bool CheckMD5Hash(string stringToCheck, string hashToCheck)
+    public bool CheckMD5Hash(byte[] contentToCheck, string hashToCheck)
     {
-        var hash = GenerateHash.HashMD5(stringToCheck);
+        string hash = GenerateHash.HashMD5(contentToCheck);
 
-        if (hash == hashToCheck)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (hash == hashToCheck) return true;
+        return false;
     }
 
-    public bool CheckSHA256Hash(string stringToCheck, string hashToCheck)
+    public bool CheckSHA256Hash(byte[] contentToCheck, string hashToCheck)
     {
-        var hash = GenerateHash.HashSHA256(stringToCheck);
+        var hash = GenerateHash.HashSHA256(contentToCheck);
 
-        if (hash == hashToCheck)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (hash == hashToCheck) return true;
+        return false;
     }
 
-    public bool CheckSHA512Hash(string stringToCheck, string hashToCheck)
+    public bool CheckSHA512Hash(byte[] contentToCheck, string hashToCheck)
     {
-        var hash = GenerateHash.HashSHA512(stringToCheck);
+        var hash = GenerateHash.HashSHA512(contentToCheck);
 
-        if (hash == hashToCheck)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public async Task<bool> CheckMD5HashFile(string fileToCheck, string hashToCheck)
-    {
-        var hash = await GenerateHash.HashMD5File(fileToCheck);
-
-        if (hash == hashToCheck)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public async Task<bool> CheckSHA256HashFile(string fileToCheck, string hashToCheck)
-    {
-        var hash = await GenerateHash.HashSHA256File(fileToCheck);
-
-        if (hash == hashToCheck)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public async Task<bool> CheckSHA512HashFile(string fileToCheck, string hashToCheck)
-    {
-        var hash = await GenerateHash.HashSHA512File(fileToCheck);
-
-        if (hash == hashToCheck)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (hash == hashToCheck) return true;
+        return false;
     }
 }
